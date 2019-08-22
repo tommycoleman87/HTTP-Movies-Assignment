@@ -42,8 +42,19 @@ const UpdateMovie = (props) => {
         )
         .catch(err => console.log(err.response));
     }
+
+    const addActor = () => {
+        setUpdateMovie({...updateMovie, stars: [...updateMovie.stars, '']})
+    }
+
+    const deleteActor = (index) => {
+        const filteredActors = updateMovie.stars.filter((actor, i) => i !== index )
+        setUpdateMovie({...updateMovie, stars: [...filteredActors]});
+    }
     return (
+        <>
         <form onSubmit={(e) => {
+            e.stopPropagation();
             e.preventDefault();
             updatedMovieSubmit();
         }}>
@@ -51,10 +62,14 @@ const UpdateMovie = (props) => {
             <input type='text' name='director' value={updateMovie.director} onChange={(e) => movieInputHandler(e)}/>
             <input type='number' name='metascore' value={updateMovie.metascore} onChange={(e) => movieInputHandler(e)}/>
             {updateMovie.stars.map((star, index) => {
-                return <input type='text' key={index} value={updateMovie.stars[index]} onChange={(e) => starsHandler(e, index)} />
+                return <div><input type='text' key={index} value={updateMovie.stars[index]} onChange={(e) => starsHandler(e, index)} /> <button onClick={(e) => {
+                    deleteActor(index)
+                }}>Delete Star</button></div>
             })}
             <button>Submit Movie</button>
         </form>
+        <button onClick={addActor}>Add Actor</button>
+        </>
     )
 }
 
